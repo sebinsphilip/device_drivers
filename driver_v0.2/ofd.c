@@ -9,8 +9,8 @@ static dev_t first_device;
 
 static int __init ofd_init(void)
 {
-        printk (KERN_INFO "Hello: ofd registered!! ");
-	if (alloc_chrdev_region(&first_device, 0, 3, "CustomCharDev") < 0)
+    printk (KERN_INFO "Hello: ofd registered!! ");
+    if (alloc_chrdev_region(&first_device, 0, 3, "CustomCharDev") < 0)
 	{
 		return -1;
 	}
