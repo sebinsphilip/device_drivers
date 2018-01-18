@@ -7,11 +7,14 @@
 #include <linux/device.h>
 #include <linux/cdev.h>
 #include <linux/uaccess.h>
+#include <linux/vmalloc.h>
 
 static dev_t first;
 static struct class *c1;
 static struct cdev c_dev;
-static char c;
+static char *buffer;
+
+#define MAX_LENGTH 255
 
 static int ofd_open (struct inode *i, struct file *f)
 {
@@ -26,28 +29,25 @@ static int ofd_close (struct inode *i, struct file *f)
 static ssize_t ofd_read (struct file *f, char __user *buf,
         size_t len, loff_t *off)
 {
-    printk (KERN_INFO "ofd: read()");
-    if (copy_to_user (buf, &c, 1) != 0)
+    ssize_t bytes = len < (MAX_LENGTH - *off) ? len : (MAX_LENGTH - *off);
+    printk (KERN_INFO "ofd: read() len = %zu, bytes= %zd, off=%lld", len, bytes, *off);
+    if (copy_to_user (buf, buffer, bytes) != 0)
     {
         return -EFAULT;
     }
-    else
-    {
-        return 1;
-    }
+    *off += bytes;
+    return bytes;
 }
 static ssize_t ofd_write (struct file *f, const char __user *buf,
         size_t len, loff_t *off)
 {
-    printk (KERN_INFO "ofd: write()");
-    if (copy_from_user(&c, buf + len -1, 1) != 0)
+    ssize_t bytes = len < MAX_LENGTH ? len : MAX_LENGTH;
+    printk (KERN_INFO "ofd: write() len = %zu, bytes= %zd, off=%lld", len, bytes, *off);
+    if (copy_from_user(buffer, buf, bytes) != 0)
     {
         return -EFAULT;
     }
-    else
-    {
-        return len;
-    }
+    return bytes;
 }
 static struct file_operations ofd_ops =
 {
@@ -84,6 +84,7 @@ static int __init ofd_init(void)
         unregister_chrdev_region (first, 1);
         return -1;
     }
+    buffer = (char*)vmalloc(MAX_LENGTH);
 
     return 0;
 }
@@ -95,6 +96,7 @@ static void __exit ofd_exit(void)
     device_destroy (c1, first);
     class_destroy(c1);
     unregister_chrdev_region (first, 1);
+    vfree(buffer);
 }
 
 module_init (ofd_init);
