@@ -27,3 +27,7 @@ note:
     Contains 8 registers
     <linux/serial_reg.h>
 
+* driverv_0.7: ioctl() is a common operation/system call available in most drivers
+    for device specific io controls (command, argument) ;both command and argument type
+    information need to be shared across userspace and kernel space.
+
