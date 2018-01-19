@@ -58,15 +58,15 @@ int main (int argc, char *argv[])
     }
     else if (2 == argc)
     {
-        if ("-g" == argv[1])
+        if (strcmp("-g", argv[1]) == 0)
         {
             option = e_get;
         }
-        else if ("-c" == argv[1])
+        else if (strcmp("-c", argv[1]) == 0)
         {
             option = e_clr;
         }
-        else if ("-s" == argv[1])
+        else if (strcmp("-s", argv[1]) == 0)
         {
             option = e_set;
         }
