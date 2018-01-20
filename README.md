@@ -31,3 +31,8 @@ note:
     for device specific io controls (command, argument) ;both command and argument type
     information need to be shared across userspace and kernel space.
 
+* all detected usb devices can be listed by 'lsusb -v'. Every usb devices may have one or more configurations/profiles
+  and every profile may have one or more interfaces.Every interface can have one or more endpoints . 'cat /sys/kernel/debug/usb/devices'.
+  do 'rmmod usb-storage' for the driver 'driverv_v0.8' to load .
+
+
