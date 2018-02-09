@@ -38,4 +38,8 @@ note:
 * 'depmod'(user-space) is a utility that generates modules.dep and modules.symbols for tracking symbols exporting/needed by a module
    and for depending modules(in /lib/modules/'uname -r'). MODULE_DEVICE_TABLE is the macro which helps in depmod to add this info.
    This enables auto-loading of modules.
+* 'fdisk -l' for listing all partitions of hdd drives. MBR(Master boot record) is stored in the 1st sector of the first track(bootsector, 512B), which
+   contains stageI bootloader and partition table (beginning at 0x1BE).MBR ends with signature 0xAA55.
+   Two boot methods BIOS-MBR and UEFI-GPT
+
 
